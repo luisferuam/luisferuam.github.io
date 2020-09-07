@@ -1,0 +1,13 @@
+# Pasos para crear el html
+
+# 1. Convertir a md, las imágenes se guardan en la carpeta myMediaFolder
+pandoc --extract-media ./myMediaFolder linear_regression.ipynb -o linear_regression.md
+
+# 2. Eliminar las líneas que empiezan por ::: usando sed. En este paso se pueden hacer otras transformaciones
+sed -i '/:::/d' linear_regression.md
+
+# 3. Añadir los metadatos, como el título, el autor o la fecha
+cat linear_regression_metadata linear_regression.md > linear_regression_with_title.md
+
+# 4. Convertir el md en html, uso la plantilla myTemplate.html5
+pandoc --data-dir=. --template=../templates/myTemplate.html5 --toc --mathjax --highlight-style tango linear_regression_with_title.md -o linear_regression.html

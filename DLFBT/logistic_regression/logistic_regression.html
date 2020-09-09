@@ -130,13 +130,13 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <body>
 <article class="markdown-body">
 <header>
-<h1 class="title">Logistic Regression</h1>
+<h1 class="title"><font color="#CA3532">Logistic Regression</font></h1>
 <p class="author">Luis F. Lago-Fernández</p>
 <p class="date">September 04, 2020</p>
 </header>
 <hr>
 <nav id="TOC">
-<h1 class="toc-title">Contents</h1>
+<h2 class="toc-title"><font color="#CA3532">Contents</font></h2>
 <ul>
 <li><a href="#introduction"><font color="#CA3532">Introduction</font></a></li>
 <li><a href="#cross-entropy-loss"><font color="#CA3532">Cross-entropy loss</font></a></li>
@@ -174,18 +174,18 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="./myMediaFolder/0986702268ef95519856abf9bb812d916a429ed8.png" /></p>
 <p>We usually interpret the model output <span class="math inline">\(y_{i} = \sigma({\bf w}^{t} {\bf x}_{i} + b)\)</span> as the probability of the target being <span class="math inline">\(1\)</span> given the attribute vector:</p>
 <p><span class="math display">\[
-y_{i} = P(t_{i} = 1 | {\bf x}_{i}).
+y_{i} = P(t = 1 | {\bf x}_{i}).
 \]</span></p>
 <p>And hence:</p>
 <p><span class="math display">\[
-1 - y_{i} = P(t_{i} = 0 | {\bf x}_{i}).
+1 - y_{i} = P(t = 0 | {\bf x}_{i}).
 \]</span></p>
 <p>So our objective is now to find a set of parameters <span class="math inline">\(\theta = \{{\bf w}, b\}\)</span> that maximizes the likelihood of the targets <span class="math inline">\(t_{i}\)</span> given the attributes <span class="math inline">\({\bf x}_{i}\)</span>.</p>
 <h2 id="cross-entropy-loss"><font color="#CA3532">Cross-entropy loss</font></h2>
 <p>The likelihood is given by:</p>
-<p><span class="math display">\[l = \prod_{i} P(t_{i} | {\bf x}_{i}).\]</span></p>
+<p><span class="math display">\[l = \prod_{i} P(t = t_{i} | {\bf x}_{i}).\]</span></p>
 <p>Taking logarithms we obtain the log-likelihood <span class="math inline">\(L\)</span>:</p>
-<p><span class="math display">\[L = \sum_{i} P(t_{i} | {\bf x}_{i}).\]</span></p>
+<p><span class="math display">\[L = \sum_{i} P(t = t_{i} | {\bf x}_{i}).\]</span></p>
 <p>And substituting the model estimation of <span class="math inline">\(P(t_{i} | {\bf x}_{i})\)</span> we get:</p>
 <p><span class="math display">\[L = \sum_{i} [t_{i} \log y_{i} + (1-t_{i}) \log (1-y_{i})],\]</span></p>
 <p>where the trick is to realize that only one of the two terms in the sum above is not zero. In order to obtain a loss function that we minimize, we simply add a minus sign to define the <strong>cross-entropy</strong> loss as:</p>
@@ -344,8 +344,8 @@ y_{i} = P(t_{i} = 1 | {\bf x}_{i}).
 <p>In a more general situation we have a set of data <span class="math inline">\(({\bf x}_{i}, t_{i})\)</span> with <span class="math inline">\({\bf x}_{i} \in \mathbb{R}^{d}\)</span>. The model is:</p>
 <p><span class="math display">\[y_{i} = \sigma({\bf w}^{t} {\bf x}_{i} + b),\]</span></p>
 <p>where <span class="math inline">\({\bf w}\)</span> is also a <span class="math inline">\(d\)</span>-dimensional vector. Now the gradients are given by the following expressions:</p>
-<p><span class="math display">\[\nabla_{{\bf w}} E = \sum_{i}(y_{i} - t_{i}){\bf x}_{i},\]</span></p>
-<p><span class="math display">\[\frac{\partial E}{\partial b} = \sum_{i}(y_{i} - t_{i}).\]</span></p>
+<p><span class="math display">\[\nabla_{{\bf w}} C = \sum_{i}(y_{i} - t_{i}){\bf x}_{i},\]</span></p>
+<p><span class="math display">\[\frac{\partial C}{\partial b} = \sum_{i}(y_{i} - t_{i}).\]</span></p>
 <h3 id="exercise"><font color="#CA3532">Exercise</font></h3>
 <ul>
 <li>Extend the previous example to the multidimensional case.</li>

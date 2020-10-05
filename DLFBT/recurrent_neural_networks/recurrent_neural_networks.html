@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<!--
+==============================================================================
+           "GitHub HTML5 Pandoc Template" v2.2 — by Tristano Ajmone
+==============================================================================
+Copyright © Tristano Ajmone, 2017-2020, MIT License (MIT). Project's home:
+
+- https://github.com/tajmone/pandoc-goodies
+
+The CSS in this template reuses source code taken from the following projects:
+
+- GitHub Markdown CSS: Copyright © Sindre Sorhus, MIT License (MIT):
+  https://github.com/sindresorhus/github-markdown-css
+
+- Primer CSS: Copyright © 2016-2017 GitHub Inc., MIT License (MIT):
+  http://primercss.io/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The MIT License
+
+Copyright (c) Tristano Ajmone, 2017-2020 (github.com/tajmone/pandoc-goodies)
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
+Copyright (c) 2017 GitHub Inc.
+
+"GitHub Pandoc HTML5 Template" is Copyright (c) Tristano Ajmone, 2017-2020,
+released under the MIT License (MIT); it contains readaptations of substantial
+portions of the following third party softwares:
+
+(1) "GitHub Markdown CSS", Copyright (c) Sindre Sorhus, MIT License (MIT).
+(2) "Primer CSS", Copyright (c) 2016 GitHub Inc., MIT License (MIT).
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+==============================================================================-->
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Luis F. Lago-Fernández" />
+  <title>Recurrent Neural Networks</title>
+  <style type="text/css">
+@charset "UTF-8";.markdown-body{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;color:#24292e;font-family:-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";font-size:16px;line-height:1.5;word-wrap:break-word;box-sizing:border-box;min-width:200px;max-width:980px;margin:0 auto;padding:45px}.markdown-body a{color:#0366d6;background-color:transparent;text-decoration:none;-webkit-text-decoration-skip:objects}.markdown-body a:active,.markdown-body a:hover{outline-width:0}.markdown-body a:hover{text-decoration:underline}.markdown-body a:not([href]){color:inherit;text-decoration:none}.markdown-body strong{font-weight:600}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{margin-top:24px;margin-bottom:16px;font-weight:600;line-height:1.25}.markdown-body h1{font-size:2em;margin:.67em 0;padding-bottom:.3em;border-bottom:1px solid #eaecef}.markdown-body h2{padding-bottom:.3em;font-size:1.5em;border-bottom:1px solid #eaecef}.markdown-body h3{font-size:1.25em}.markdown-body h4{font-size:1em}.markdown-body h5{font-size:.875em}.markdown-body h6{font-size:.85em;color:#6a737d}.markdown-body img{border-style:none}.markdown-body svg:not(:root){overflow:hidden}.markdown-body hr{box-sizing:content-box;height:.25em;margin:24px 0;padding:0;overflow:hidden;background-color:#e1e4e8;border:0}.markdown-body hr::before{display:table;content:""}.markdown-body hr::after{display:table;clear:both;content:""}.markdown-body input{margin:0;overflow:visible;font:inherit;font-family:inherit;font-size:inherit;line-height:inherit}.markdown-body [type=checkbox]{box-sizing:border-box;padding:0}.markdown-body *{box-sizing:border-box}.markdown-body blockquote{margin:0}.markdown-body ol,.markdown-body ul{padding-left:2em}.markdown-body ol ol,.markdown-body ul ol{list-style-type:lower-roman}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:0;margin-bottom:0}.markdown-body ol ol ol,.markdown-body ol ul ol,.markdown-body ul ol ol,.markdown-body ul ul ol{list-style-type:lower-alpha}.markdown-body li>p{margin-top:16px}.markdown-body li+li{margin-top:.25em}.markdown-body dd{margin-left:0}.markdown-body dl{padding:0}.markdown-body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:600}.markdown-body dl dd{padding:0 16px;margin-bottom:16px}.markdown-body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace}.markdown-body pre{font:12px SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;word-wrap:normal}.markdown-body blockquote,.markdown-body dl,.markdown-body ol,.markdown-body p,.markdown-body pre,.markdown-body table,.markdown-body ul{margin-top:0;margin-bottom:16px}.markdown-body blockquote{padding:0 1em;color:#6a737d;border-left:.25em solid #dfe2e5}.markdown-body blockquote>:first-child{margin-top:0}.markdown-body blockquote>:last-child{margin-bottom:0}.markdown-body table{display:block;width:100%;overflow:auto;border-spacing:0;border-collapse:collapse}.markdown-body table th{font-weight:600}.markdown-body table td,.markdown-body table th{padding:6px 13px;border:1px solid #dfe2e5}.markdown-body table tr{background-color:#fff;border-top:1px solid #c6cbd1}.markdown-body table tr:nth-child(2n){background-color:#f6f8fa}.markdown-body img{max-width:100%;box-sizing:content-box;background-color:#fff}.markdown-body code{padding:.2em 0;margin:0;font-size:90%;background-color:rgba(27,31,35,.05);border-radius:3px}.markdown-body code::after,.markdown-body code::before{letter-spacing:-.2em;content:" "}.markdown-body pre>code{padding:0;margin:0;font-size:100%;word-break:normal;white-space:pre;background:0 0;border:0}.markdown-body .highlight{margin-bottom:16px}.markdown-body .highlight pre{margin-bottom:0;word-break:normal}.markdown-body .highlight pre,.markdown-body pre{padding:16px;overflow:auto;font-size:90%;line-height:1.45;background-color:#f6f8fa;border-radius:3px}.markdown-body pre code{display:inline;max-width:auto;padding:0;margin:0;overflow:visible;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}.markdown-body pre code::after,.markdown-body pre code::before{content:normal}.markdown-body .full-commit .btn-outline:not(:disabled):hover{color:#005cc5;border-color:#005cc5}.markdown-body kbd{box-shadow:inset 0 -1px 0 #959da5;display:inline-block;padding:3px 5px;font:11px/10px SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;color:#444d56;vertical-align:middle;background-color:#fcfcfc;border:1px solid #c6cbd1;border-bottom-color:#959da5;border-radius:3px;box-shadow:inset 0 -1px 0 #959da5}.markdown-body :checked+.radio-label{position:relative;z-index:1;border-color:#0366d6}.markdown-body .task-list-item{list-style-type:none}.markdown-body .task-list-item+.task-list-item{margin-top:3px}.markdown-body .task-list-item input{margin:0 .2em .25em -1.6em;vertical-align:middle}.markdown-body::before{display:table;content:""}.markdown-body::after{display:table;clear:both;content:""}.markdown-body>:first-child{margin-top:0!important}.markdown-body>:last-child{margin-bottom:0!important}.Alert,.Error,.Note,.Success,.Warning{padding:11px;margin-bottom:24px;border-style:solid;border-width:1px;border-radius:4px}.Alert p,.Error p,.Note p,.Success p,.Warning p{margin-top:0}.Alert p:last-child,.Error p:last-child,.Note p:last-child,.Success p:last-child,.Warning p:last-child{margin-bottom:0}.Alert{color:#246;background-color:#e2eef9;border-color:#bac6d3}.Warning{color:#4c4a42;background-color:#fff9ea;border-color:#dfd8c2}.Error{color:#911;background-color:#fcdede;border-color:#d2b2b2}.Success{color:#22662c;background-color:#e2f9e5;border-color:#bad3be}.Note{color:#2f363d;background-color:#f6f8fa;border-color:#d5d8da}.Alert h1,.Alert h2,.Alert h3,.Alert h4,.Alert h5,.Alert h6{color:#246;margin-bottom:0}.Warning h1,.Warning h2,.Warning h3,.Warning h4,.Warning h5,.Warning h6{color:#4c4a42;margin-bottom:0}.Error h1,.Error h2,.Error h3,.Error h4,.Error h5,.Error h6{color:#911;margin-bottom:0}.Success h1,.Success h2,.Success h3,.Success h4,.Success h5,.Success h6{color:#22662c;margin-bottom:0}.Note h1,.Note h2,.Note h3,.Note h4,.Note h5,.Note h6{color:#2f363d;margin-bottom:0}.Alert h1:first-child,.Alert h2:first-child,.Alert h3:first-child,.Alert h4:first-child,.Alert h5:first-child,.Alert h6:first-child,.Error h1:first-child,.Error h2:first-child,.Error h3:first-child,.Error h4:first-child,.Error h5:first-child,.Error h6:first-child,.Note h1:first-child,.Note h2:first-child,.Note h3:first-child,.Note h4:first-child,.Note h5:first-child,.Note h6:first-child,.Success h1:first-child,.Success h2:first-child,.Success h3:first-child,.Success h4:first-child,.Success h5:first-child,.Success h6:first-child,.Warning h1:first-child,.Warning h2:first-child,.Warning h3:first-child,.Warning h4:first-child,.Warning h5:first-child,.Warning h6:first-child{margin-top:0}h1.title,p.subtitle{text-align:center}h1.title.followed-by-subtitle{margin-bottom:0}p.subtitle{font-size:1.5em;font-weight:600;line-height:1.25;margin-top:0;margin-bottom:16px;padding-bottom:.3em}div.line-block{white-space:pre-line}
+  </style>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<article class="markdown-body">
+<header>
+<h1 class="title">Recurrent Neural Networks</h1>
+<p class="author">Luis F. Lago-Fernández</p>
+<p class="date"><a href="https://colab.research.google.com/github/luisferuam/luisferuam.github.io/blob/master/DLFBT/recurrent_neural_networks/recurrent_neural_networks.ipynb">Open in Google Colab</a></p>
+</header>
+<hr>
+<nav id="TOC">
+<h1 class="toc-title">Contents</h1>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#some-simple-examples">Some simple examples</a></li>
+<li><a href="#resources">Resources</a></li>
+<li><a href="#simple-rnn">Simple RNN</a>
+<ul>
+<li><a href="#elman-formulation-elman-1990">Elman formulation (Elman, 1990)</a></li>
+<li><a href="#jordan-formulation-jordan-1997">Jordan formulation (Jordan, 1997)</a></li>
+</ul></li>
+<li><a href="#example-detect-the-presence-of-a-given-pattern-in-a-bit-sequence">Example. Detect the presence of a given pattern in a bit sequence</a>
+<ul>
+<li><a href="#solution-using-a-ff-network">Solution using a FF network</a></li>
+<li><a href="#solution-using-a-rnn">Solution using a RNN</a></li>
+</ul></li>
+<li><a href="#backpropagation-through-time">Backpropagation through time</a></li>
+<li><a href="#example-predict-the-parity-of-bit-sequence">Example. Predict the parity of bit sequence</a></li>
+<li><a href="#the-vanishing-and-exploding-gradient-problems">The vanishing and exploding gradient problems</a></li>
+<li><a href="#long-short-term-memory-lstm">Long short-term memory (LSTM)</a></li>
+<li><a href="#gated-recurrent-unit-gru">Gated recurrent unit (GRU)</a></li>
+<li><a href="#final-example-text-generation-predict-the-next-char">Final example. Text generation: predict the next char</a></li>
+</ul>
+</nav>
+<hr>
+<h2 id="introduction">Introduction</h2>
+<p>Recurrent Neural Networks (RNNs) are deep neural networks whose architecture includes recurrent connections (loops) from one layer to itself or from one layer to a previous layer. This way the information may flow back through recurrent loops. This is in contrast with feed-forward (FF) networks, where the information flows always forwards (from one layer to the next).</p>
+<p>These networks are specially designed to cope with sequential inputs, and are the current state of the art in many deep learning applications related to sequence classification or sequence modeling, such as:</p>
+<ul>
+<li><p>Text processing or generation: automatic translation, sentiment analysis, chatbots, ...</p></li>
+<li><p>Automatic music composition</p></li>
+<li><p>Temporal series forecasting: stock market, weather, ...</p></li>
+</ul>
+<h2 id="some-simple-examples">Some simple examples</h2>
+<p>Let us start by considering several simple examples of the kind of input/output we usually process with a RNN.</p>
+<p><strong>Example 1: Predict the parity of bit sequence</strong></p>
+<p>The input is a bit sequence and the output is the parity of the sequence (1 if the number of ones is an odd number, 0 if it is an even number) at each position. The network must provide an output for each input symbol in the sequence. We include an additional <code>$</code> symbol that resets the parity to 0, making the sequence start again. One example of input/output sequences follows:</p>
+<pre><code>INPUT:  $11011100000010001$1100000001010011$001001110$$010
+OUTPUT: 01001011111110000101000000001100010000111010000011</code></pre>
+<p><strong>Example 2: Detect the presence of a given pattern in a bit sequence</strong></p>
+<p>The input is a bit sequence and the output is 1 if a given pattern <code>w</code> appears anywhere within the sequence, 0 otherwise. The network must provide one single output for the whole sequence. Two examples of input/output sequences for the pattern <code>w = 11011</code> (one of class 0 and one of class 1) follow:</p>
+<pre><code>INPUT:  1011100101111111010000001 
+OUTPUT: 0
+INPUT:  0110111001000100000101010
+OUTPUT: 1</code></pre>
+<p><strong>Example 3: Predict the next char</strong></p>
+<p>The input is a text string and the output is the same string with all the characters shifted one position to the left. The network must provide an output for each input character: the next character in the sequence. One example of input/output sequences follows:</p>
+<pre><code>INPUT:  &#39;En un lugar de la Mancha&#39;
+OUTPUT: &#39;n un lugar de la Mancha &#39;</code></pre>
+<p>What is common to all the previous problems is that the input consists in all cases of ordered sequences, and this order is relevant for the classification task. Although we could in principle use a standard feed-forward neural network to tackle these problems, this kind of architecture does not make use of the temporal relations between the inputs, and so it will have many difficulties to find good solutions.</p>
+<p>In general, when facing a classification problem that involves temporal sequences, we need a model that is able to manage the following constraints:</p>
+<ol type="1">
+<li>The order in which the elements appear in the input sequence is relevant.</li>
+<li>Each input sequence may be of a different length.</li>
+<li>There may be long-term dependencies. That is, the output for time <span class="math inline">\(t\)</span> may be dependent on the input seen many time steps before.</li>
+</ol>
+<p>It is also a good idea to force the model to share its parameters across the sequence.</p>
+<p>RNNs are built with all these constraints in mind.</p>
+<h2 id="resources">Resources</h2>
+<p>The following are some interesting on-line resources about recurrent neural networks.</p>
+<ul>
+<li><p><em>Deep Sequence Modeling</em> lecture from MIT <a href="http://introtodeeplearning.com/">Introduction to Deep Learning</a> course:</p>
+<ul>
+<li><a href="http://introtodeeplearning.com/slides/6S191_MIT_DeepLearning_L2.pdf">Slides</a></li>
+<li><a href="https://www.youtube.com/watch?v=SEnXr6v2ifU&amp;list=PLtBw6njQRU-rwp5__7C0oIVt26ZgjG9NI&amp;index=2">Video</a></li>
+</ul></li>
+<li><p><em>Recurrent Neural Networks</em> lecture from Stanford <a href="http://cs231n.stanford.edu/">Convolutional Neural Networks for Visual Recognition</a> course:</p>
+<ul>
+<li><a href="http://cs231n.stanford.edu/slides/2020/lecture_10.pdf">Slides</a></li>
+<li><a href="https://www.youtube.com/watch?v=6niqTuYFZLQ&amp;list=PL3FW7Lu3i5JvHM8ljYj-zLfQRF3EO8sYv&amp;index=10">Video (2017 edition)</a></li>
+</ul></li>
+<li><p><a href="https://stanford.edu/~shervine/teaching/cs-230/cheatsheet-recurrent-neural-networks">Recurrent Neural Networks cheatsheet</a> by Afshine Amidi and Shervine Amidi.</p></li>
+<li><p>Post <a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/">The Unreasonable Effectiveness of Recurrent Neural Networks</a> in Andrej Karpathy's blog.</p></li>
+<li><p>Post <a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">Understanding LSTM Networks</a> in Christopher Olah's blog.</p></li>
+</ul>
+<h2 id="simple-rnn">Simple RNN</h2>
+<h3 id="elman-formulation-elman-1990">Elman formulation (Elman, 1990)</h3>
+<p>The recurrence is from the hidden layer to itself:</p>
+<p><span class="math display">\[
+{\bf h}_{t} = f(W_{xh} {\bf x}_{t} + W_{hh} {\bf h}_{t-1} + {\bf b}_{h}), 
+\]</span></p>
+<p><span class="math display">\[
+{\bf y}_{t} = f(W_{hy} {\bf h}_{t} + {\bf b}_{y}). 
+\]</span></p>
+<h3 id="jordan-formulation-jordan-1997">Jordan formulation (Jordan, 1997)</h3>
+<p>The recurrence is from the output layer to the hidden layer:</p>
+<p><span class="math display">\[
+{\bf h}_{t} = f(W_{xh} {\bf x}_{t} + W_{yh} {\bf y}_{t-1} + {\bf b}_{h}),
+\]</span></p>
+<p><span class="math display">\[
+{\bf y}_{t} = f(W_{hy} {\bf h}_{t} + {\bf b}_{y}).
+\]</span></p>
+<h2 id="example-detect-the-presence-of-a-given-pattern-in-a-bit-sequence">Example. Detect the presence of a given pattern in a bit sequence</h2>
+<p>We will use the second of the introductory examples to get some insight on RNNs. We will first try to solve the problem with a standard FF neural network to see the difficulties it finds. Then we will approach the problem with a simple Elman RNN. This is an example of a many-to-one architecture.</p>
+<p>We first import all the necessary modules:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="op">%</span>tensorflow_version <span class="fl">2.</span>x</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="im">from</span> keras.models <span class="im">import</span> Sequential, Model</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="im">from</span> keras.layers <span class="im">import</span> Flatten, Dense, LSTM, GRU, SimpleRNN</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="im">from</span> keras <span class="im">import</span> backend <span class="im">as</span> K</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a><span class="im">from</span> keras.utils.vis_utils <span class="im">import</span> plot_model</span></code></pre></div>
+<p>The following code defines a function to create the dataset. The argument <code>n</code> is the number of input patterns, <code>seq_len</code> is the sequence length and <code>pattern</code> is the pattern to be detected in the sequences.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="kw">def</span> create_data_set(n, seq_len, pattern):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>  x <span class="op">=</span> np.random.randint(<span class="dv">0</span>, <span class="dv">2</span>, (n, seq_len))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>  </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>  x_as_string <span class="op">=</span> [<span class="st">&#39;&#39;</span>.join([<span class="bu">chr</span>(c<span class="op">+</span><span class="dv">48</span>) <span class="cf">for</span> c <span class="kw">in</span> a]) <span class="cf">for</span> a <span class="kw">in</span> x]</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>  t <span class="op">=</span> np.array([pattern <span class="kw">in</span> s <span class="cf">for</span> s <span class="kw">in</span> x_as_string])<span class="op">*</span><span class="dv">1</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>  <span class="cf">return</span> x, x_as_string, t</span></code></pre></div>
+<p>We use the <code>create_data_set</code> function to create datasets for training and validation:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>n <span class="op">=</span> <span class="dv">50000</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>seq_len <span class="op">=</span> <span class="dv">25</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a>pattern <span class="op">=</span> <span class="st">&#39;11011&#39;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a>x, x_as_string, t <span class="op">=</span> create_data_set(n, seq_len, pattern)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a>xval, xval_as_string, tval <span class="op">=</span> create_data_set(n, seq_len, pattern)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a><span class="cf">for</span> s, c <span class="kw">in</span> <span class="bu">zip</span>(x_as_string[:<span class="dv">20</span>], t[:<span class="dv">20</span>]):</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a>  <span class="bu">print</span>(s, c)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true"></a><span class="bu">print</span>(<span class="st">&#39;Class mean (training):&#39;</span>, t.mean())</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true"></a><span class="bu">print</span>(<span class="st">&#39;Class mean (validation):&#39;</span>, tval.mean())</span></code></pre></div>
+<pre><code>0011010010101101010000010 0
+0010000100001000011001011 0
+1101000000001000001011011 1
+0001000010100100001100100 0
+1110111001110001111001011 1
+0100111101100011111111101 1
+1011111010110010110011010 0
+1101100010001000101001111 1
+1010101111001011011001100 1
+0100000010000111011100010 1
+0000111001010011010100101 0
+0110000101010010000100001 0
+1010010010110001011101001 0
+1111011100011110010110111 1
+0000011001110100110110110 1
+1001000110000000001001111 0
+0010100100100101110001000 0
+1001111000111000011101101 1
+0101010001011001111111110 0
+1111100101100000000110000 0
+Class mean (training): 0.46958
+Class mean (validation): 0.4674</code></pre>
+<p>We observe that the pattern appears in approximately one half of the input sequences.</p>
+<h3 id="solution-using-a-ff-network">Solution using a FF network</h3>
+<p>Model definition:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>K.clear_session()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>model <span class="op">=</span> keras.Sequential()</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>model.add(keras.layers.Dense(<span class="dv">10</span>, input_shape<span class="op">=</span>(seq_len,), activation<span class="op">=</span><span class="st">&quot;relu&quot;</span>))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>model.add(keras.layers.Dense(<span class="dv">1</span>, activation<span class="op">=</span><span class="st">&quot;sigmoid&quot;</span>))</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a><span class="bu">print</span>(model.summary())</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a>plot_model(model, show_shapes<span class="op">=</span><span class="va">True</span>, show_layer_names<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<pre><code>Model: &quot;sequential&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+dense (Dense)                (None, 10)                260       
+_________________________________________________________________
+dense_1 (Dense)              (None, 1)                 11        
+=================================================================
+Total params: 271
+Trainable params: 271
+Non-trainable params: 0
+_________________________________________________________________
+None</code></pre>
+<p><img src="./myMediaFolder/cf4de2d6d023e2ef70dc4715581c7a005e103d31.png" /></p>
+<p>Model compilation:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>model.<span class="bu">compile</span>(loss<span class="op">=</span><span class="st">&#39;binary_crossentropy&#39;</span>, optimizer<span class="op">=</span>keras.optimizers.Adam(), metrics<span class="op">=</span>[<span class="st">&#39;accuracy&#39;</span>])</span></code></pre></div>
+<p>Model training:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a>history <span class="op">=</span> model.fit(x, t, epochs<span class="op">=</span><span class="dv">1000</span>, batch_size<span class="op">=</span><span class="dv">1000</span>, validation_data<span class="op">=</span>(xval, tval))</span></code></pre></div>
+<p>Plots of loss and accuracy:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a>hd <span class="op">=</span> history.history</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">6</span>))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;accuracy&#39;</span>], <span class="st">&quot;r&quot;</span>, label<span class="op">=</span><span class="st">&quot;train&quot;</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;val_accuracy&#39;</span>], <span class="st">&quot;b&quot;</span>, label<span class="op">=</span><span class="st">&quot;valid&quot;</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true"></a>plt.xlabel(<span class="st">&quot;epoch&quot;</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true"></a>plt.ylabel(<span class="st">&quot;accuracy&quot;</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true"></a>plt.title(<span class="st">&quot;Accuracy&quot;</span>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true"></a>plt.legend()</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;loss&#39;</span>], <span class="st">&quot;r&quot;</span>, label<span class="op">=</span><span class="st">&quot;train&quot;</span>)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;val_loss&#39;</span>], <span class="st">&quot;b&quot;</span>, label<span class="op">=</span><span class="st">&quot;valid&quot;</span>)</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true"></a>plt.xlabel(<span class="st">&quot;epoch&quot;</span>)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true"></a>plt.ylabel(<span class="st">&quot;loss&quot;</span>)</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true"></a>plt.title(<span class="st">&quot;Loss&quot;</span>)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true"></a>plt.legend()</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true"></a></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true"></a>plt.show()</span></code></pre></div>
+<p><img src="./myMediaFolder/40697189234dfcf1f736c214a448ba83c626e9ba.png" /></p>
+<h3 id="solution-using-a-rnn">Solution using a RNN</h3>
+<p>Model definition. The following points are important:</p>
+<ul>
+<li><p><code>stateful=False</code>: This indicates that it is not necessary to pass the last state to the next batch.</p></li>
+<li><p><code>return_sequences=False</code>: This indicates that it is not necessary to output the states at all time steps, only the last one.</p></li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a>K.clear_session()</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>model <span class="op">=</span> Sequential()</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a>model.add(SimpleRNN(<span class="dv">10</span>, activation<span class="op">=</span><span class="st">&quot;tanh&quot;</span>, input_shape<span class="op">=</span>(seq_len, <span class="dv">1</span>), return_sequences<span class="op">=</span><span class="va">False</span>, stateful<span class="op">=</span><span class="va">False</span>, unroll<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a>model.add(Dense(<span class="dv">1</span>, activation<span class="op">=</span><span class="st">&#39;sigmoid&#39;</span>))</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true"></a><span class="bu">print</span>(model.summary())</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true"></a>plot_model(model, show_shapes<span class="op">=</span><span class="va">True</span>, show_layer_names<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<pre><code>Model: &quot;sequential&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+simple_rnn (SimpleRNN)       (None, 10)                120       
+_________________________________________________________________
+dense (Dense)                (None, 1)                 11        
+=================================================================
+Total params: 131
+Trainable params: 131
+Non-trainable params: 0
+_________________________________________________________________
+None</code></pre>
+<p><img src="./myMediaFolder/dbbeae8c4420410a35a137ca58f3e9eaa03f9f95.png" /></p>
+<p>Model compilation:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a>model.<span class="bu">compile</span>(loss<span class="op">=</span><span class="st">&#39;binary_crossentropy&#39;</span>, optimizer<span class="op">=</span>keras.optimizers.Adam(), metrics<span class="op">=</span>[<span class="st">&#39;accuracy&#39;</span>])</span></code></pre></div>
+<p>Model training:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a>history <span class="op">=</span> model.fit(x[:, :, <span class="va">None</span>], t[:, <span class="va">None</span>], epochs<span class="op">=</span><span class="dv">200</span>, batch_size<span class="op">=</span><span class="dv">1000</span>, validation_data<span class="op">=</span>(xval[:, :, <span class="va">None</span>], tval[:, <span class="va">None</span>]))</span></code></pre></div>
+<p>Plots of loss and accuracy:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a>hd <span class="op">=</span> history.history</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">6</span>))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;accuracy&#39;</span>], <span class="st">&quot;r&quot;</span>, label<span class="op">=</span><span class="st">&quot;train&quot;</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;val_accuracy&#39;</span>], <span class="st">&quot;b&quot;</span>, label<span class="op">=</span><span class="st">&quot;valid&quot;</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true"></a>plt.xlabel(<span class="st">&quot;epoch&quot;</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true"></a>plt.ylabel(<span class="st">&quot;accuracy&quot;</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true"></a>plt.title(<span class="st">&quot;Accuracy&quot;</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true"></a>plt.legend()</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;loss&#39;</span>], <span class="st">&quot;r&quot;</span>, label<span class="op">=</span><span class="st">&quot;train&quot;</span>)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;val_loss&#39;</span>], <span class="st">&quot;b&quot;</span>, label<span class="op">=</span><span class="st">&quot;valid&quot;</span>)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true"></a>plt.xlabel(<span class="st">&quot;epoch&quot;</span>)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true"></a>plt.ylabel(<span class="st">&quot;loss&quot;</span>)</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true"></a>plt.title(<span class="st">&quot;Loss&quot;</span>)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true"></a>plt.legend()</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true"></a></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true"></a>plt.show()</span></code></pre></div>
+<p><img src="./myMediaFolder/be76eb73cf4afa9488a64dda4d5d5bc414099b19.png" /></p>
+<p>Note that, in spite of having a fewer number of trainable parameters, the RNN converges faster than the FF network and gets a much better solution.</p>
+<h2 id="backpropagation-through-time">Backpropagation through time</h2>
+<p>Let us consider the Elman model. The network state <span class="math inline">\({\bf h}_{t}\)</span> depends on the state at the previous time step, <span class="math inline">\({\bf h}_{t-1}\)</span>, and this depends in turn on <span class="math inline">\({\bf h}_{t-2}\)</span>, and so on. It is sometimes useful to imagine an unfolded representation of the RNN model, where we have a different copy of the network for every time step and the state is passed from one time step to the next one:</p>
+<p><img src="./myMediaFolder/e4f7224553c69bab96f0ec1966f2558df31a72ce.png" /></p>
+<p>We see that <span class="math inline">\({\bf h}_{t}\)</span>, and hence <span class="math inline">\({\bf y}_{t}\)</span>, depends on all the past history (all past inputs and all past states). As all the network 'copies' share the same parameters, when computing the gradients of the loss function with respect to the hidden layer's weights and biases we need to backpropagate the error signal for an arbitrarily large number of time steps. This is of course unfeasible in any practical situation, so we usually do is to fix a time window of <code>seq_len</code> time steps and do not backpropagate the error further than this (<em>truncated backpropagation through time</em>).</p>
+<p>The network state may however be passed continuously from one batch to the next and hence the network can in principle track events that ocurred many time steps before (long term dependencies).</p>
+<h2 id="example-predict-the-parity-of-bit-sequence">Example. Predict the parity of bit sequence</h2>
+<p>The second example is the parity problem described above. The input is a string with several bit sequences separated by the <code>$</code> symbol, and the output is the parity of the sequence since the last <code>$</code>. One example of input/output is shown below:</p>
+<pre><code>INPUT:  $11011100000010001$1100000001010011$001001110$$010
+OUTPUT: 01001011111110000101000000001100010000111010000011</code></pre>
+<p>The following function is used to generate input/output sequences for the parity problem:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a><span class="kw">def</span> generate_sequences(n, p0, p1):</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a>  <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a><span class="co">  n is the number of elements in the sequence</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a><span class="co">  p0 and p1 must be probabilities, with p0 + p1 &lt;= 1</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true"></a><span class="co">  the probability for the $ symbol is assumed to be p$ = 1 - p0 - p1</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true"></a><span class="co">  &quot;&quot;&quot;</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true"></a>  r <span class="op">=</span> np.random.rand(n)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true"></a>  x_sym <span class="op">=</span> np.full(n, <span class="st">&#39;$&#39;</span>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true"></a>  x <span class="op">=</span> np.full(n, <span class="dv">2</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true"></a>  x_sym[r <span class="op">&lt;</span> p0 <span class="op">+</span> p1] <span class="op">=</span> <span class="st">&#39;1&#39;</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true"></a>  x[r <span class="op">&lt;</span> p0 <span class="op">+</span> p1] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true"></a>  x_sym[r <span class="op">&lt;</span> p0] <span class="op">=</span> <span class="st">&#39;0&#39;</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true"></a>  x[r <span class="op">&lt;</span> p0] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true"></a>  x_sym[<span class="dv">0</span>] <span class="op">=</span> <span class="st">&#39;$&#39;</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true"></a>  x[<span class="dv">0</span>] <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true"></a>  t <span class="op">=</span> np.zeros(n, dtype<span class="op">=</span>np.<span class="bu">int</span>)</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true"></a>  k <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true"></a>    <span class="cf">if</span> x[i] <span class="op">==</span> <span class="dv">2</span>:</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true"></a>      t[i] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true"></a>      k <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true"></a>    <span class="cf">else</span>:</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true"></a>      k <span class="op">+=</span> x[i]</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true"></a>      t[i] <span class="op">=</span> k<span class="op">%</span><span class="dv">2</span></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true"></a></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true"></a>  x_string <span class="op">=</span> <span class="st">&#39;&#39;</span>.join(x_sym)</span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true"></a>  t_string <span class="op">=</span> <span class="st">&#39;&#39;</span>.join([<span class="bu">chr</span>(c<span class="op">+</span><span class="dv">48</span>) <span class="cf">for</span> c <span class="kw">in</span> t])</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true"></a></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true"></a>  x_one_hot <span class="op">=</span> <span class="dv">1</span><span class="op">*</span>(np.arange(<span class="dv">3</span>)[:, <span class="va">None</span>] <span class="op">==</span> x[<span class="va">None</span>, :])</span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true"></a></span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true"></a>  <span class="cf">return</span> x, t, x_one_hot, x_string, t_string</span></code></pre></div>
+<p>The following code generates a sequence of length 5000:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a>num_pats <span class="op">=</span> <span class="dv">5000</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a>x, t, x_one_hot, x_string, t_string <span class="op">=</span> generate_sequences(num_pats, <span class="fl">0.45</span>, <span class="fl">0.45</span>)</span></code></pre></div>
+<p>Model definition. Note that in this case we need a many-to-many architecture, since we need one output for each time step. The model needs also to be <em>stateful</em>.</p>
+<ul>
+<li><p><code>stateful=True</code>: This indicates that it is necessary to pass the last state to the next batch.</p></li>
+<li><p><code>return_sequences=True</code>: This indicates that it is necessary to output the states at all time steps, not only the last one.</p></li>
+</ul>
+<p>Also, when using a stateful model we need to specify the batch size:</p>
+<ul>
+<li><code>batch_input_shape=(1, seq_len, 3)</code></li>
+</ul>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a>K.clear_session()</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true"></a>seq_len <span class="op">=</span> <span class="dv">50</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true"></a>model <span class="op">=</span> Sequential()</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true"></a>model.add(SimpleRNN(<span class="dv">10</span>, activation<span class="op">=</span><span class="st">&#39;tanh&#39;</span>, batch_input_shape<span class="op">=</span>(<span class="dv">1</span>, seq_len, <span class="dv">3</span>), return_sequences<span class="op">=</span><span class="va">True</span>, stateful<span class="op">=</span><span class="va">True</span>, unroll<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true"></a>model.add(Dense(<span class="dv">1</span>, activation<span class="op">=</span><span class="st">&#39;sigmoid&#39;</span>))</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true"></a><span class="bu">print</span>(model.summary())</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true"></a>plot_model(model, show_shapes<span class="op">=</span><span class="va">True</span>, show_layer_names<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<pre><code>Model: &quot;sequential&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+simple_rnn (SimpleRNN)       (1, 50, 10)               140       
+_________________________________________________________________
+dense (Dense)                (1, 50, 1)                11        
+=================================================================
+Total params: 151
+Trainable params: 151
+Non-trainable params: 0
+_________________________________________________________________
+None</code></pre>
+<p><img src="./myMediaFolder/4256ceacde6280e1ed79a75262b7efd01e8d0211.png" /></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a>learning_rate <span class="op">=</span> <span class="fl">0.1</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a>model.<span class="bu">compile</span>(loss<span class="op">=</span><span class="st">&#39;binary_crossentropy&#39;</span>, optimizer<span class="op">=</span>keras.optimizers.Adam(), metrics<span class="op">=</span>[<span class="st">&#39;accuracy&#39;</span>])</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true"></a>num_epochs <span class="op">=</span> <span class="dv">100</span> </span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true"></a>num_batches <span class="op">=</span> num_pats <span class="op">//</span> seq_len <span class="co"># possibly ignore last elements in sequence </span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true"></a>model_loss <span class="op">=</span> np.zeros(num_epochs)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true"></a>model_acc <span class="op">=</span> np.zeros(num_epochs)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(num_epochs):</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true"></a>  model.reset_states() <span class="co"># reset state at the beginning of each epoch</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true"></a></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true"></a>  mean_tr_loss <span class="op">=</span> []</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true"></a>  mean_tr_acc <span class="op">=</span> []</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true"></a>  <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(num_batches):</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true"></a>    imin <span class="op">=</span> j<span class="op">*</span>seq_len</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true"></a>    imax <span class="op">=</span> (j<span class="op">+</span><span class="dv">1</span>)<span class="op">*</span>seq_len</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true"></a>    </span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true"></a>    seq_x <span class="op">=</span> x_one_hot[:, imin:imax].transpose()</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true"></a>    seq_t <span class="op">=</span> t[imin:imax]</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true"></a></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true"></a>    tr_loss, tr_acc <span class="op">=</span> model.train_on_batch(seq_x[<span class="va">None</span>, :, :], seq_t[<span class="va">None</span>, :, <span class="va">None</span>])</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true"></a>    mean_tr_loss.append(tr_loss)</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true"></a>    mean_tr_acc.append(tr_acc)</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true"></a>  </span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true"></a>  model_loss[epoch] <span class="op">=</span> np.array(mean_tr_loss).mean()</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true"></a>  model_acc[epoch] <span class="op">=</span> np.array(mean_tr_acc).mean()</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true"></a></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true"></a>  <span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Training epoch: </span><span class="sc">%d</span><span class="st"> / </span><span class="sc">%d</span><span class="st">&quot;</span> <span class="op">%</span> (epoch<span class="op">+</span><span class="dv">1</span>, num_epochs), end<span class="op">=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true"></a>  <span class="bu">print</span>(<span class="st">&quot;, loss = </span><span class="sc">%f</span><span class="st">, acc = </span><span class="sc">%f</span><span class="st">&quot;</span> <span class="op">%</span> (model_loss[epoch], model_acc[epoch]), end<span class="op">=</span><span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a>plt.plot(model_loss)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true"></a>plt.xlabel(<span class="st">&#39;epoch&#39;</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true"></a>plt.ylabel(<span class="st">&#39;loss&#39;</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true"></a>plt.show()</span></code></pre></div>
+<p><img src="./myMediaFolder/7c9a0c65f9f5321ea522e2bf41c4f5ea0e3a42fe.png" /></p>
+<p>Evaluate model on test data:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a>num_test_pats <span class="op">=</span> <span class="dv">5000</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true"></a>x_test, t_test, x_test_one_hot, x_test_string, t_test_string <span class="op">=</span> generate_sequences(num_test_pats, <span class="fl">0.45</span>, <span class="fl">0.45</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true"></a>num_test_batches <span class="op">=</span> num_test_pats <span class="op">//</span> seq_len</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true"></a>test_loss <span class="op">=</span> []</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true"></a>test_acc <span class="op">=</span> []</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true"></a><span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(num_test_batches):</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true"></a>  imin <span class="op">=</span> j<span class="op">*</span>seq_len</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true"></a>  imax <span class="op">=</span> (j<span class="op">+</span><span class="dv">1</span>)<span class="op">*</span>seq_len</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true"></a>  </span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true"></a>  seq_x <span class="op">=</span> x_test_one_hot[:, imin:imax].transpose()</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true"></a>  seq_t <span class="op">=</span> t_test[imin:imax]</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true"></a></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true"></a>  loss, acc <span class="op">=</span> model.test_on_batch(seq_x[<span class="va">None</span>, :, :], seq_t[<span class="va">None</span>, :, <span class="va">None</span>])</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true"></a>  test_loss.append(loss)</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true"></a>  test_acc.append(acc)</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true"></a></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true"></a><span class="bu">print</span>(<span class="st">&quot;Test loss = </span><span class="sc">%f</span><span class="st">, test acc = </span><span class="sc">%f</span><span class="st">&quot;</span> <span class="op">%</span> (np.array(test_loss).mean(), np.array(test_acc).mean()))</span></code></pre></div>
+<pre><code>Test loss = 0.000384, test acc = 1.000000</code></pre>
+<h2 id="the-vanishing-and-exploding-gradient-problems">The vanishing and exploding gradient problems</h2>
+<p>If we analyze the gradient flow in an Elman RNN, we observe that with each step back in the computational graph the gradient of the loss function gets multiplied by:</p>
+<p><span class="math display">\[
+\frac{\partial{{\bf h}_{t}}}{\partial{{\bf h}_{t-1}}} = W_{hh}^{t} f&#39;({\bf v}_{t})
+\]</span></p>
+<p>When using activations such as the <em>sigmoid</em> or <em>tanh</em> functions, whose derivatives are always (<em>sigmoid</em>) or almost always (<em>tanh</em>) lower than 1, the gradient gets repeatedly multiplied by a small constant, and hence tends to zero after several time steps. This is known as the <em>vanishing gradient</em> problem.</p>
+<p>We could consider using a linear activation, but even in this case the gradient is continuously multiplied by the matrix <span class="math inline">\(W_{hh}^{t}\)</span>. In such a situation the behaviour depends on the largest singular value of this matrix:</p>
+<ul>
+<li><p>If it is greater than one, the gradient continuously increases (<em>exploding gradient</em> problem).</p></li>
+<li><p>If it is lower than one, the gradient decreases to zero (<em>vanishing gradient</em> problem).</p></li>
+</ul>
+<p>The <em>exploding gradient</em> problem can be safely avoided by using a technique called <em>gradient clipping</em> which consists of scaling down the gradient if its norm is too big.</p>
+<p>The <em>vanishing gradient</em> problem has no easy solution, but some RNN architectures have been designed to reduce its effects.</p>
+<h2 id="long-short-term-memory-lstm">Long short-term memory (LSTM)</h2>
+<p>LSTMs (Hochreiter and Schmidhuber, 1997) are designed to avoid the long term dependency problem due to the vanishing gradient. They are governed by the following equations:</p>
+<p><span class="math display">\[
+\begin{eqnarray}
+{\bf f}_{t} &amp;=&amp; \sigma(W_{f} [{\bf x}_{t}; {\bf h}_{t-1}] + {\bf b}_{f}),\\
+{\bf i}_{t} &amp;=&amp; \sigma(W_{i} [{\bf x}_{t}; {\bf h}_{t-1}] + {\bf b}_{i}),\\
+\tilde{{\bf c}}_{t} &amp;=&amp; \tanh(W_{c} [{\bf x}_{t}; {\bf h}_{t-1}] + {\bf b}_{c}),\\ 
+{\bf c}_{t} &amp;=&amp; {\bf f}_{t} \circ {\bf c}_{t-1} + {\bf i}_{t} \circ \tilde{{\bf c}}_{t},\\ 
+{\bf o}_{t} &amp;=&amp; \sigma(W_{o} [{\bf x}_{t}; {\bf h}_{t-1}] + {\bf b}_{o}), \\
+{\bf h}_{t} &amp;=&amp; {\bf o}_{t} \circ \tanh({\bf c}_{t}). 
+\end{eqnarray}
+\]</span></p>
+<p>In these equations <span class="math inline">\([{\bf x}_{t}; {\bf h}_{t-1}]\)</span> means the concatenation of vectors <span class="math inline">\({\bf x}_{t}\)</span> and <span class="math inline">\({\bf h}_{t-1}\)</span>, and the operator <span class="math inline">\(\circ\)</span> represents an element-wise multiplication.</p>
+<p>The LSTM provides an uninterrupted gradient flow that allows the network learn long term dependencies.</p>
+<h2 id="gated-recurrent-unit-gru">Gated recurrent unit (GRU)</h2>
+<p>The Gated Recurrent Unit (Cho et al., 2014) is a modification of the LSTM architecture that combines the forget and input gates into a single update gate, reducing the number of parameters.</p>
+<p><span class="math display">\[
+\begin{eqnarray*}
+{\bf z}_{t} &amp;=&amp; \sigma(W_{z} [{\bf x}_{t}; {\bf h}_{t-1}] + {\bf b}_{z}),\\
+{\bf r}_{t} &amp;=&amp; \sigma(W_{r} [{\bf x}_{t}; {\bf h}_{t-1}] + {\bf b}_{r}),\\
+\tilde{{\bf h}}_{t} &amp;=&amp; \tanh(W_{h} [{\bf x}_{t}; {\bf r}_{t} \circ {\bf h}_{t-1}] + {\bf b}_{h}),\\ 
+{\bf h}_{t} &amp;=&amp; (1 - {\bf z}_{t}) \circ {\bf h}_{t-1} + {\bf z}_{t} \circ \tilde{{\bf h}}_{t}. 
+\end{eqnarray*}
+\]</span></p>
+<h2 id="final-example-text-generation-predict-the-next-char">Final example. Text generation: predict the next char</h2>
+<p>... to do...</p>
+</article>
+</body>
+</html>

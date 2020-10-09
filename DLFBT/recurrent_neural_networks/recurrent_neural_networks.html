@@ -155,7 +155,8 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#the-vanishing-and-exploding-gradient-problems">The vanishing and exploding gradient problems</a></li>
 <li><a href="#long-short-term-memory-lstm">Long short-term memory (LSTM)</a></li>
 <li><a href="#gated-recurrent-unit-gru">Gated recurrent unit (GRU)</a></li>
-<li><a href="#final-example-text-generation-predict-the-next-char">Final example. Text generation: predict the next char</a></li>
+<li><a href="#text-generation-predict-the-next-char">Text generation: predict the next char</a></li>
+<li><a href="#sequence-to-sequence-seq2seq-learning-binary-to-decimal-translation">Sequence-to-sequence (seq2seq) learning: binary to decimal translation</a></li>
 </ul>
 </nav>
 <hr>
@@ -235,7 +236,7 @@ OUTPUT: &#39;n un lugar de la Mancha &#39;</code></pre>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="im">from</span> keras.models <span class="im">import</span> Sequential, Model</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="im">from</span> keras.layers <span class="im">import</span> Flatten, Dense, LSTM, GRU, SimpleRNN</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="im">from</span> keras.layers <span class="im">import</span> Flatten, Dense, LSTM, GRU, SimpleRNN, RepeatVector, Input</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="im">from</span> keras <span class="im">import</span> backend <span class="im">as</span> K</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a><span class="im">from</span> keras.utils.vis_utils <span class="im">import</span> plot_model</span></code></pre></div>
 <p>The following code defines a function to create the dataset. The argument <code>n</code> is the number of input patterns, <code>seq_len</code> is the sequence length and <code>pattern</code> is the pattern to be detected in the sequences.</p>
@@ -564,8 +565,246 @@ None</code></pre>
 {\bf h}_{t} &amp;=&amp; (1 - {\bf z}_{t}) \circ {\bf h}_{t-1} + {\bf z}_{t} \circ \tilde{{\bf h}}_{t}. 
 \end{eqnarray*}
 \]</span></p>
-<h2 id="final-example-text-generation-predict-the-next-char">Final example. Text generation: predict the next char</h2>
-<p>... to do...</p>
+<h2 id="text-generation-predict-the-next-char">Text generation: predict the next char</h2>
+<p>See notebook text_generation_quijote.ipynb</p>
+<h2 id="sequence-to-sequence-seq2seq-learning-binary-to-decimal-translation">Sequence-to-sequence (seq2seq) learning: binary to decimal translation</h2>
+<p><a href="https://keras.io/examples/nlp/lstm_seq2seq/" class="uri">https://keras.io/examples/nlp/lstm_seq2seq/</a></p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a><span class="kw">def</span> generate_data_bin_dec(n, maxnum, dpad, bpad):</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a>  x <span class="op">=</span> np.random.randint(<span class="dv">0</span>, maxnum, n)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a>  xdec_as_string <span class="op">=</span> [<span class="bu">str</span>(a).zfill(dpad) <span class="cf">for</span> a <span class="kw">in</span> x]</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a>  xbin_as_string <span class="op">=</span> [<span class="bu">bin</span>(a).replace(<span class="st">&quot;0b&quot;</span>,<span class="st">&quot;&quot;</span>).zfill(bpad) <span class="cf">for</span> a <span class="kw">in</span> x] </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true"></a>  xbin <span class="op">=</span> np.array([[<span class="bu">ord</span>(a) <span class="op">-</span> <span class="dv">48</span> <span class="cf">for</span> a <span class="kw">in</span> b] <span class="cf">for</span> b <span class="kw">in</span> xbin_as_string])</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true"></a>  xdec <span class="op">=</span> np.array([[<span class="bu">ord</span>(a) <span class="op">-</span> <span class="dv">48</span> <span class="cf">for</span> a <span class="kw">in</span> b] <span class="cf">for</span> b <span class="kw">in</span> xdec_as_string])</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true"></a>  xdec_one_hot <span class="op">=</span> <span class="dv">1</span><span class="op">*</span>(np.arange(<span class="dv">10</span>)[<span class="va">None</span>, <span class="va">None</span>, :] <span class="op">==</span> xdec[:, :, <span class="va">None</span>])</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true"></a>  </span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true"></a>  <span class="cf">return</span> xdec_as_string, xbin_as_string, xdec, xbin, xdec_one_hot</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a>seq_len_bin <span class="op">=</span> <span class="dv">24</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true"></a>seq_len_dec <span class="op">=</span> <span class="dv">8</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true"></a>_, _, d, b, doh <span class="op">=</span> generate_data_bin_dec(<span class="dv">10000</span>, <span class="dv">2</span><span class="op">**</span><span class="dv">15</span>, seq_len_dec, seq_len_bin)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true"></a>_, _, d_val, b_val, doh_val <span class="op">=</span> generate_data_bin_dec(<span class="dv">10000</span>, <span class="dv">2</span><span class="op">**</span><span class="dv">15</span>, seq_len_dec, seq_len_bin)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a>b.shape</span></code></pre></div>
+<pre><code>(10000, 24)</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>d.shape</span></code></pre></div>
+<pre><code>(10000, 8)</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true"></a>doh.shape</span></code></pre></div>
+<pre><code>(10000, 8, 10)</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true"></a>K.clear_session()</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true"></a>model <span class="op">=</span> Sequential()</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true"></a>model.add(LSTM(<span class="dv">100</span>, input_shape<span class="op">=</span>(seq_len_bin, <span class="dv">1</span>), return_sequences<span class="op">=</span><span class="va">False</span>, stateful<span class="op">=</span><span class="va">False</span>, unroll<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true"></a>model.add(RepeatVector(seq_len_dec))</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true"></a>model.add(LSTM(<span class="dv">100</span>, return_sequences<span class="op">=</span><span class="va">True</span>, stateful<span class="op">=</span><span class="va">False</span>, unroll<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true"></a>model.add(Dense(<span class="dv">10</span>, activation<span class="op">=</span><span class="st">&#39;softmax&#39;</span>))</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true"></a><span class="bu">print</span>(model.summary())</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true"></a>plot_model(model, show_shapes<span class="op">=</span><span class="va">True</span>, show_layer_names<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<pre><code>WARNING:tensorflow:Layer lstm will not use cuDNN kernel since it doesn&#39;t meet the cuDNN kernel criteria. It will use generic GPU kernel as fallback when running on GPU
+WARNING:tensorflow:Layer lstm_1 will not use cuDNN kernel since it doesn&#39;t meet the cuDNN kernel criteria. It will use generic GPU kernel as fallback when running on GPU
+Model: &quot;sequential&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+lstm (LSTM)                  (None, 100)               40800     
+_________________________________________________________________
+repeat_vector (RepeatVector) (None, 8, 100)            0         
+_________________________________________________________________
+lstm_1 (LSTM)                (None, 8, 100)            80400     
+_________________________________________________________________
+dense (Dense)                (None, 8, 10)             1010      
+=================================================================
+Total params: 122,210
+Trainable params: 122,210
+Non-trainable params: 0
+_________________________________________________________________
+None</code></pre>
+<p><img src="./myMediaFolder/0f3fb661fcd1fc18fab789e9b9168a122b3039b5.png" /></p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true"></a>model.<span class="bu">compile</span>(loss<span class="op">=</span><span class="st">&#39;sparse_categorical_crossentropy&#39;</span>, optimizer<span class="op">=</span>keras.optimizers.Adam(), metrics<span class="op">=</span>[<span class="st">&#39;accuracy&#39;</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true"></a>history <span class="op">=</span> model.fit(b[:, :, <span class="va">None</span>], d[:, :, <span class="va">None</span>], epochs<span class="op">=</span><span class="dv">500</span>, batch_size<span class="op">=</span><span class="dv">200</span>, validation_data<span class="op">=</span>(b_val[:, :, <span class="va">None</span>], d_val[:, :, <span class="va">None</span>]))</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true"></a>hd <span class="op">=</span> history.history</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">6</span>))</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true"></a></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;accuracy&#39;</span>], <span class="st">&quot;r&quot;</span>, label<span class="op">=</span><span class="st">&quot;train&quot;</span>)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;val_accuracy&#39;</span>], <span class="st">&quot;b&quot;</span>, label<span class="op">=</span><span class="st">&quot;valid&quot;</span>)</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true"></a>plt.xlabel(<span class="st">&quot;epoch&quot;</span>)</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true"></a>plt.ylabel(<span class="st">&quot;accuracy&quot;</span>)</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true"></a>plt.title(<span class="st">&quot;Accuracy&quot;</span>)</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true"></a>plt.legend()</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true"></a></span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;loss&#39;</span>], <span class="st">&quot;r&quot;</span>, label<span class="op">=</span><span class="st">&quot;train&quot;</span>)</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;val_loss&#39;</span>], <span class="st">&quot;b&quot;</span>, label<span class="op">=</span><span class="st">&quot;valid&quot;</span>)</span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true"></a>plt.xlabel(<span class="st">&quot;epoch&quot;</span>)</span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true"></a>plt.ylabel(<span class="st">&quot;loss&quot;</span>)</span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true"></a>plt.title(<span class="st">&quot;Loss&quot;</span>)</span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true"></a>plt.legend()</span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true"></a></span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true"></a>plt.show()</span></code></pre></div>
+<p><img src="./myMediaFolder/cb68cc5d49f7b479ffbdf9c3729b9842f74fd1b4.png" /></p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true"></a>y <span class="op">=</span> model.predict(b_val[:, :, <span class="va">None</span>])</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true"></a>y <span class="op">=</span> np.argmax(y, axis<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true"></a>y[:<span class="dv">20</span>] </span></code></pre></div>
+<pre><code>array([[0, 0, 0, 0, 7, 2, 0, 1],
+       [0, 0, 0, 1, 8, 7, 4, 8],
+       [0, 0, 0, 2, 9, 4, 6, 7],
+       [0, 0, 0, 2, 0, 7, 5, 9],
+       [0, 0, 0, 3, 2, 4, 8, 2],
+       [0, 0, 0, 1, 0, 3, 8, 7],
+       [0, 0, 0, 0, 4, 3, 3, 5],
+       [0, 0, 0, 0, 3, 4, 0, 9],
+       [0, 0, 0, 0, 5, 9, 9, 8],
+       [0, 0, 0, 1, 1, 1, 4, 7],
+       [0, 0, 0, 2, 5, 3, 2, 2],
+       [0, 0, 0, 2, 5, 6, 4, 9],
+       [0, 0, 0, 1, 6, 4, 3, 6],
+       [0, 0, 0, 3, 2, 3, 4, 7],
+       [0, 0, 0, 2, 4, 6, 4, 7],
+       [0, 0, 0, 0, 5, 8, 6, 0],
+       [0, 0, 0, 1, 4, 6, 5, 9],
+       [0, 0, 0, 1, 8, 0, 8, 1],
+       [0, 0, 0, 2, 1, 6, 9, 6],
+       [0, 0, 0, 1, 7, 7, 5, 1]])</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true"></a>d_val[:<span class="dv">20</span>]</span></code></pre></div>
+<pre><code>array([[0, 0, 0, 0, 7, 2, 0, 1],
+       [0, 0, 0, 1, 8, 7, 4, 0],
+       [0, 0, 0, 2, 9, 4, 6, 3],
+       [0, 0, 0, 2, 0, 7, 3, 7],
+       [0, 0, 0, 3, 2, 4, 8, 2],
+       [0, 0, 0, 1, 0, 3, 9, 1],
+       [0, 0, 0, 0, 4, 3, 4, 3],
+       [0, 0, 0, 0, 3, 4, 2, 1],
+       [0, 0, 0, 0, 5, 9, 9, 6],
+       [0, 0, 0, 1, 1, 1, 4, 7],
+       [0, 0, 0, 2, 5, 3, 1, 6],
+       [0, 0, 0, 2, 5, 6, 4, 1],
+       [0, 0, 0, 1, 6, 4, 7, 4],
+       [0, 0, 0, 3, 2, 3, 4, 7],
+       [0, 0, 0, 2, 4, 6, 4, 7],
+       [0, 0, 0, 0, 5, 8, 7, 6],
+       [0, 0, 0, 1, 4, 6, 6, 7],
+       [0, 0, 0, 1, 8, 0, 8, 9],
+       [0, 0, 0, 2, 1, 6, 1, 0],
+       [0, 0, 0, 1, 7, 7, 4, 7]])</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true"></a>r <span class="op">=</span> np.array([<span class="dv">10000000</span>, <span class="dv">1000000</span>, <span class="dv">100000</span>, <span class="dv">10000</span>, <span class="dv">1000</span>, <span class="dv">100</span>, <span class="dv">10</span>, <span class="dv">1</span>])</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">6</span>))</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true"></a>plt.plot(np.dot(d_val, r), np.dot(y, r), <span class="st">&#39;o&#39;</span>)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true"></a>plt.xlabel(<span class="st">&#39;Real&#39;</span>)</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true"></a>plt.ylabel(<span class="st">&#39;Predicted&#39;</span>)</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true"></a>plt.show()</span></code></pre></div>
+<p><img src="./myMediaFolder/5bd9eafb0654b92fc8484a0afb5841035f229112.png" /></p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true"></a><span class="dv">2</span><span class="op">**</span><span class="dv">15</span></span></code></pre></div>
+<pre><code>32768</code></pre>
+<p>Using the functional API to gain flexibility:</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true"></a>K.clear_session()</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true"></a>encoder_input <span class="op">=</span> Input(shape<span class="op">=</span>(seq_len_bin, <span class="dv">1</span>))</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true"></a>encoder <span class="op">=</span> SimpleRNN(<span class="dv">200</span>, activation<span class="op">=</span><span class="st">&#39;tanh&#39;</span>, return_sequences<span class="op">=</span><span class="va">False</span>, stateful<span class="op">=</span><span class="va">False</span>, unroll<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true"></a>state <span class="op">=</span> encoder(encoder_input)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true"></a></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true"></a>decoder_input <span class="op">=</span> Input(shape<span class="op">=</span>(seq_len_dec, <span class="dv">1</span>))</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true"></a>decoder <span class="op">=</span> SimpleRNN(<span class="dv">200</span>, activation<span class="op">=</span><span class="st">&#39;tanh&#39;</span>, return_sequences<span class="op">=</span><span class="va">True</span>, stateful<span class="op">=</span><span class="va">False</span>, unroll<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true"></a>decoder_output <span class="op">=</span> decoder(decoder_input, initial_state<span class="op">=</span>state)</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true"></a>output_layer <span class="op">=</span> Dense(<span class="dv">10</span>, activation<span class="op">=</span><span class="st">&#39;softmax&#39;</span>)</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true"></a>output <span class="op">=</span> output_layer(decoder_output)</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true"></a></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true"></a>model <span class="op">=</span> Model([encoder_input, decoder_input], output)</span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true"></a></span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true"></a><span class="bu">print</span>(model.summary())</span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true"></a>plot_model(model, show_shapes<span class="op">=</span><span class="va">True</span>, show_layer_names<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<pre><code>Model: &quot;functional_1&quot;
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_1 (InputLayer)            [(None, 24, 1)]      0                                            
+__________________________________________________________________________________________________
+input_2 (InputLayer)            [(None, 8, 1)]       0                                            
+__________________________________________________________________________________________________
+simple_rnn (SimpleRNN)          (None, 200)          40400       input_1[0][0]                    
+__________________________________________________________________________________________________
+simple_rnn_1 (SimpleRNN)        (None, 8, 200)       40400       input_2[0][0]                    
+                                                                 simple_rnn[0][0]                 
+__________________________________________________________________________________________________
+dense (Dense)                   (None, 8, 10)        2010        simple_rnn_1[0][0]               
+==================================================================================================
+Total params: 82,810
+Trainable params: 82,810
+Non-trainable params: 0
+__________________________________________________________________________________________________
+None</code></pre>
+<p><img src="./myMediaFolder/38e79330595dab44484965a01b443ee54766a50a.png" /></p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true"></a>model.<span class="bu">compile</span>(loss<span class="op">=</span><span class="st">&#39;sparse_categorical_crossentropy&#39;</span>, optimizer<span class="op">=</span>keras.optimizers.Adam(), metrics<span class="op">=</span>[<span class="st">&#39;accuracy&#39;</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true"></a><span class="op">%%</span>time</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true"></a>history <span class="op">=</span> model.fit([b[:, :, <span class="va">None</span>], np.zeros((<span class="dv">10000</span>, <span class="dv">8</span>, <span class="dv">1</span>))], d[:, :, <span class="va">None</span>], epochs<span class="op">=</span><span class="dv">500</span>, batch_size<span class="op">=</span><span class="dv">200</span>, validation_data<span class="op">=</span>([b_val[:, :, <span class="va">None</span>], np.zeros((<span class="dv">10000</span>, <span class="dv">8</span>, <span class="dv">1</span>))], d_val[:, :, <span class="va">None</span>]))</span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true"></a>hd <span class="op">=</span> history.history</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true"></a></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">6</span>))</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true"></a></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;accuracy&#39;</span>], <span class="st">&quot;r&quot;</span>, label<span class="op">=</span><span class="st">&quot;train&quot;</span>)</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;val_accuracy&#39;</span>], <span class="st">&quot;b&quot;</span>, label<span class="op">=</span><span class="st">&quot;valid&quot;</span>)</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true"></a>plt.xlabel(<span class="st">&quot;epoch&quot;</span>)</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true"></a>plt.ylabel(<span class="st">&quot;accuracy&quot;</span>)</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true"></a>plt.title(<span class="st">&quot;Accuracy&quot;</span>)</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true"></a>plt.legend()</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true"></a></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;loss&#39;</span>], <span class="st">&quot;r&quot;</span>, label<span class="op">=</span><span class="st">&quot;train&quot;</span>)</span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true"></a>plt.plot(hd[<span class="st">&#39;val_loss&#39;</span>], <span class="st">&quot;b&quot;</span>, label<span class="op">=</span><span class="st">&quot;valid&quot;</span>)</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true"></a>plt.xlabel(<span class="st">&quot;epoch&quot;</span>)</span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true"></a>plt.ylabel(<span class="st">&quot;loss&quot;</span>)</span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true"></a>plt.title(<span class="st">&quot;Loss&quot;</span>)</span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true"></a>plt.legend()</span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true"></a></span>
+<span id="cb53-23"><a href="#cb53-23" aria-hidden="true"></a>plt.show()</span></code></pre></div>
+<p><img src="./myMediaFolder/ead795080460a05b0134562aadc99dc894b4efc9.png" /></p>
+<p>Final version:</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true"></a>dec_input <span class="op">=</span> np.concatenate((np.zeros((<span class="dv">10000</span>, <span class="dv">1</span>, <span class="dv">10</span>)), doh[:, :<span class="op">-</span><span class="dv">1</span>, :]), axis<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true"></a>K.clear_session()</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true"></a></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true"></a>encoder_input <span class="op">=</span> Input(shape<span class="op">=</span>(seq_len_bin, <span class="dv">1</span>))</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true"></a>encoder <span class="op">=</span> SimpleRNN(<span class="dv">200</span>, activation<span class="op">=</span><span class="st">&#39;tanh&#39;</span>, return_sequences<span class="op">=</span><span class="va">False</span>, stateful<span class="op">=</span><span class="va">False</span>, unroll<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true"></a>state <span class="op">=</span> encoder(encoder_input)</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true"></a></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true"></a>decoder_input <span class="op">=</span> Input(shape<span class="op">=</span>(seq_len_dec, <span class="dv">10</span>))</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true"></a>decoder <span class="op">=</span> SimpleRNN(<span class="dv">200</span>, activation<span class="op">=</span><span class="st">&#39;tanh&#39;</span>, return_sequences<span class="op">=</span><span class="va">True</span>, stateful<span class="op">=</span><span class="va">False</span>, unroll<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true"></a>decoder_output <span class="op">=</span> decoder(decoder_input, initial_state<span class="op">=</span>state)</span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true"></a>output_layer <span class="op">=</span> Dense(<span class="dv">10</span>, activation<span class="op">=</span><span class="st">&#39;softmax&#39;</span>)</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true"></a>output <span class="op">=</span> output_layer(decoder_output)</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true"></a></span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true"></a>model <span class="op">=</span> Model([encoder_input, decoder_input], output)</span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true"></a></span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true"></a><span class="bu">print</span>(model.summary())</span>
+<span id="cb55-16"><a href="#cb55-16" aria-hidden="true"></a>plot_model(model, show_shapes<span class="op">=</span><span class="va">True</span>, show_layer_names<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<pre><code>Model: &quot;functional_1&quot;
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_1 (InputLayer)            [(None, 24, 1)]      0                                            
+__________________________________________________________________________________________________
+input_2 (InputLayer)            [(None, 8, 10)]      0                                            
+__________________________________________________________________________________________________
+simple_rnn (SimpleRNN)          (None, 200)          40400       input_1[0][0]                    
+__________________________________________________________________________________________________
+simple_rnn_1 (SimpleRNN)        (None, 8, 200)       42200       input_2[0][0]                    
+                                                                 simple_rnn[0][0]                 
+__________________________________________________________________________________________________
+dense (Dense)                   (None, 8, 10)        2010        simple_rnn_1[0][0]               
+==================================================================================================
+Total params: 84,610
+Trainable params: 84,610
+Non-trainable params: 0
+__________________________________________________________________________________________________
+None</code></pre>
+<p><img src="./myMediaFolder/ab73637e96eedaa208e05f5e6fc9c5f82cde433f.png" /></p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true"></a>model.<span class="bu">compile</span>(loss<span class="op">=</span><span class="st">&#39;sparse_categorical_crossentropy&#39;</span>, optimizer<span class="op">=</span>keras.optimizers.Adam(), metrics<span class="op">=</span>[<span class="st">&#39;accuracy&#39;</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true"></a>history <span class="op">=</span> model.fit([b[:, :, <span class="va">None</span>], dec_input], d[:, :, <span class="va">None</span>], epochs<span class="op">=</span><span class="dv">500</span>, batch_size<span class="op">=</span><span class="dv">200</span>)</span></code></pre></div>
 </article>
 </body>
 </html>
